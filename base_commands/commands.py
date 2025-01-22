@@ -18,11 +18,8 @@ async def start_command(message: types.Message):
 @router.message(F.text == BaseButtonKeyboards.HELP)
 @router.message(Command('help'))
 async def help_command(message: types.Message):
-    text = markdown.text(markdown.markdown_decoration.quote("Dapamoha! Зараз транслірую пітанячы код:"),
-                         markdown.markdown_decoration.pre_language(
-                             "print('Hello World!')",
-                             language="python",
-                         ),
-                         sep="\n",
+    text = markdown.text("/start - Прывітанне\n"
+                         "/help - Дапамога\n"
+                         "/weather - Надвор'е"
                          )
-    await message.answer(text=text, parse_mode=ParseMode.MARKDOWN_V2)
+    await message.answer(text=text)

@@ -23,6 +23,7 @@ class BaseButtonKeyboards:
 
 class InlineBaseButtonKeyboards:
     WHY = "Навошта гэты бот?"
+    HELP = "Дапамога па боту, альбо паглядзець каманды."
     MOVE_TO_DEV = "Перайсці на старонку распрацоўніка бота (Місі)"
 
     @staticmethod
@@ -30,6 +31,8 @@ class InlineBaseButtonKeyboards:
         keyboard = InlineKeyboardBuilder()
         keyboard.add(
             types.InlineKeyboardButton(text=InlineBaseButtonKeyboards.WHY, callback_data=BaseCallbacks.why_bot))
+        keyboard.add(
+            types.InlineKeyboardButton(text=InlineBaseButtonKeyboards.HELP, callback_data=BaseCallbacks.get_help))
         keyboard.add(
             types.InlineKeyboardButton(text=InlineBaseButtonKeyboards.MOVE_TO_DEV, url='https://t.me/kikijuly3'))
 
