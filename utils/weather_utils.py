@@ -1,29 +1,7 @@
 from aiohttp import ClientSession
 import random
-import aiosqlite
-
-import json
-from datetime import datetime
 
 from config import BASE_DIR
-
-# async def create_table():
-#     async with aiosqlite.connect('utils.db') as db:
-#         await db.execute('''CREATE TABLE IF NOT EXISTS requests (date DATETIME, city TEXT, utils TEXT)''')
-#         await db.commit()
-
-
-# async def save_to_db(city, utils):
-#     async with aiosqlite.connect('utils.db') as db:
-#
-#         query = '''INSERT INTO requests (date, city, utils) VALUES (?, ?, ?)'''
-#
-#         try:
-#             await db.execute(query, (datetime.now(), city, json.dumps(utils)))
-#         except aiosqlite.Error as e:
-#             print(f"Ошибка при выполнении запроса: {e}")
-#
-#         await db.commit()
 
 
 async def get_weather(lon, lat) -> dict:
