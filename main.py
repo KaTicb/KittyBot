@@ -10,11 +10,12 @@ import asyncio
 from utils import router as utils_router
 from base_commands import router as base_router
 from keyboards import router as callbacks_router
+from wish_list import router as wish_list_router
 
 api_key = settings.api_key
 dp = Dispatcher()
 
-dp.include_routers(base_router, callbacks_router, utils_router, )
+dp.include_routers(base_router, callbacks_router, utils_router, wish_list_router,)
 
 
 async def main():

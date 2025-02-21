@@ -1,5 +1,4 @@
 from aiogram import Router, types, F
-from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.utils import markdown
 
@@ -20,6 +19,7 @@ async def start_command(message: types.Message):
 async def help_command(message: types.Message):
     text = markdown.text("/start - Прывітанне\n"
                          "/help - Дапамога\n"
-                         "/weather - Надвор'е"
+                         "/weather - Надвор'е\n"
+                         "/wish_list - Ліст жаданняў\n"
                          )
     await message.answer(text=text)
