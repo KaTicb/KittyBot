@@ -1,13 +1,13 @@
 from aiohttp import ClientSession
 import random
 
-from config import BASE_DIR
+from config import BASE_DIR, settings
 
 
 async def get_weather(lon, lat) -> dict:
 
     url = f'http://api.openweathermap.org/data/2.5/weather'
-    params = {'lon': lon, 'lat': lat, 'appid': '2a4ff86f9aaa70041ec8e82db64abf56', 'lang': 'be'}
+    params = {'lon': lon, 'lat': lat, 'appid': settings.weather_key, 'lang': 'be'}
 
     async with ClientSession() as session:
         async with session.get(url=url, params=params) as response:

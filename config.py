@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     )
 
     api_key: str = os.getenv("API_KEY")
-    # add keys for whether utils
+    weather_key: str = os.getenv("WEATHER_KEY")
 
 
 settings = Settings()
