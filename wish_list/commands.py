@@ -110,12 +110,12 @@ async def add_item_list_command(message: types.Message, state: FSMContext):
     try:
         item_id = int(message.text)
         if item_id < 1:
-            raise TypeError
+            raise ValueError
 
         await database.delete_item(item_id)
         await message.answer(text="Рэч выдалена паспяхова!", reply_markup=WishListButtonKeyboards.wish_list_keyboard())
 
-    except TypeError:
+    except ValueError:
         await state.set_state(WishStates.wish_delete_thing_state)
         await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля (1)!")
 
