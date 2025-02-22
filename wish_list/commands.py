@@ -168,7 +168,7 @@ async def update_item_list_command(message: types.Message, state: FSMContext):
     except ValueError:
         await state.set_state(WishStates.wish_update_thing_state)
         await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля! "
-                                  "Мабыць, няправільны фармат",
+                                  "Мабыць, няправільны фармат!",
                              reply_markup=WishListButtonKeyboards.close_button_keyboard())
 
     except aiosqlite.OperationalError as op_error:
