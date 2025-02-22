@@ -31,3 +31,10 @@ class WishListButtonKeyboards:
         keyboard.button(text=WishListButtonKeyboards.ALL)
 
         return keyboard.as_markup(resize_keyboard=True)
+
+    @staticmethod
+    def close_button_keyboard():
+        keyboard = ReplyKeyboardBuilder()
+        keyboard.button(text=WishListButtonKeyboards.CLOSE_WISH_LIST)
+
+        return keyboard.as_markup(resize_keyboard=True)

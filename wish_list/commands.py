@@ -1,10 +1,12 @@
+import logging
+
 from aiogram import Router, types, F
 from aiogram.filters import Command
 from aiogram.enums import ChatAction
 from aiogram.utils.chat_action import ChatActionSender
 from aiogram.fsm.context import FSMContext
 
-from .model import DatabaseManager
+from .model import *
 from .states import WishStates
 
 from keyboards.wish_list_keyboards import WishListButtonKeyboards
@@ -112,18 +114,26 @@ async def add_item_list_command(message: types.Message, state: FSMContext):
         if item_id < 1:
             raise ValueError
 
-        await database.delete_item(item_id)
+        user_name = message.from_user.username
+        rowcount = await database.delete_item(item_id, user_name)
+        if not rowcount:
+            raise aiosqlite.OperationalError
+
         await message.answer(text="Рэч выдалена паспяхова!", reply_markup=WishListButtonKeyboards.wish_list_keyboard())
 
     except ValueError:
         await state.set_state(WishStates.wish_delete_thing_state)
-        await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля (1)!")
-
-    # except something from DB:
+        await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля!",
+                             reply_markup=WishListButtonKeyboards.close_button_keyboard())
+    except aiosqlite.OperationalError as op_error:
+        logging.info(op_error)
+        await state.set_state(WishStates.wish_delete_thing_state)
+        await message.answer(text="Няма такога нумара ў базе!",
+                             reply_markup=WishListButtonKeyboards.close_button_keyboard())
 
 
 # Close state command
-@router.message(WishStates.base_wish_action_state, F.text == WishListButtonKeyboards.CLOSE_WISH_LIST)
+@router.message(F.text == WishListButtonKeyboards.CLOSE_WISH_LIST)
 async def close_list_command(message: types.Message, state: FSMContext):
     await state.clear()
     await message.answer(text="Ліст жаданняў закрыты!", reply_markup=ReplyKeyboardRemove())

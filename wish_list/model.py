@@ -51,10 +51,10 @@ class DatabaseManager:
 
             return cursor.rowcount > 0
 
-    async def delete_item(self, item_id: int) -> bool:
+    async def delete_item(self, item_id: int, user_name: str) -> bool:
         """Delete a record by ID"""
         async with aiosqlite.connect(self.db_name) as db:
-            cursor = await db.execute('DELETE FROM wish_list WHERE id=?', (item_id,))
+            cursor = await db.execute('DELETE FROM wish_list WHERE id=? AND owner=?', (item_id, user_name))
             await db.commit()
             return cursor.rowcount > 0
 
@@ -76,12 +76,8 @@ class DatabaseManager:
 
 
 async def main():
-    db = DatabaseManager()
-    # await db.init_database()
-    # print(await db.create_item('car', 'kisi'))
-    print(await db.get_list_by_owner('kisi'))
-    # print(await db.delete_item(1))
-    # print(await db.update_item(2, description='new description'))
+    db = DatabaseManager(db_name="../wish_list.db")
+    await db.init_database()
 
 
 if __name__ == '__main__':
