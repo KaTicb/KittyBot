@@ -125,9 +125,55 @@ async def add_item_list_command(message: types.Message, state: FSMContext):
         await state.set_state(WishStates.wish_delete_thing_state)
         await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля!",
                              reply_markup=WishListButtonKeyboards.close_button_keyboard())
+
     except aiosqlite.OperationalError as op_error:
         logging.info(op_error)
         await state.set_state(WishStates.wish_delete_thing_state)
+        await message.answer(text="Няма такога нумара ў базе!",
+                             reply_markup=WishListButtonKeyboards.close_button_keyboard())
+
+
+#Update list items
+@router.message(WishStates.base_wish_action_state, F.text == WishListButtonKeyboards.UPDATE_LIST)
+async def update_list_command(message: types.Message, state: FSMContext):
+    await state.set_state(WishStates.wish_update_thing_state)
+
+    database = DatabaseManager()
+    wish_list = await database.get_list_by_owner(message.from_user.username)
+    text = get_text_from_db(wish_list)
+    text += "Напішы <b>нумар рэчы</b>, якую хочаш змяніць (у фармаце 'нумар'-'жаданне' :"
+
+    await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
+
+
+@router.message(WishStates.wish_update_thing_state)
+async def update_item_list_command(message: types.Message, state: FSMContext):
+    await state.set_state(WishStates.base_wish_action_state)
+
+    database = DatabaseManager()
+    try:
+
+        item_id, updated_text = message.text.split('-', 1)
+        item_id = int(item_id)
+        if item_id < 1:
+            raise ValueError
+
+        user_name = message.from_user.username
+        rowcount = await database.update_item(item_id, user_name, item_name=updated_text)
+        if not rowcount:
+            raise aiosqlite.OperationalError
+
+        await message.answer(text="Рэч зьменяна паспяхова!", reply_markup=WishListButtonKeyboards.wish_list_keyboard())
+
+    except ValueError:
+        await state.set_state(WishStates.wish_update_thing_state)
+        await message.answer(text="Нумар з літар або з сімвалаў! Павінны быць лічбы болей нуля! "
+                                  "Мабыць, няправільны фармат",
+                             reply_markup=WishListButtonKeyboards.close_button_keyboard())
+
+    except aiosqlite.OperationalError as op_error:
+        logging.info(op_error)
+        await state.set_state(WishStates.wish_update_thing_state)
         await message.answer(text="Няма такога нумара ў базе!",
                              reply_markup=WishListButtonKeyboards.close_button_keyboard())
 

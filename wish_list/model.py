@@ -33,7 +33,7 @@ class DatabaseManager:
             await db.commit()
             return cursor.lastrowid
 
-    async def update_item(self, item_id: int, **kwargs) -> bool:
+    async def update_item(self, item_id: int, user_name: str, **kwargs) -> bool:
         """Update a record"""
         async with aiosqlite.connect(self.db_name) as db:
             columns = []
@@ -44,8 +44,9 @@ class DatabaseManager:
                 values.append(value)
 
             values.append(item_id)
+            values.append(user_name)
 
-            query = f"UPDATE wish_list SET {', '.join(columns)} WHERE id=?"
+            query = f"UPDATE wish_list SET {', '.join(columns)} WHERE id=? AND owner=?"
             cursor = await db.execute(query, values)
             await db.commit()
 
